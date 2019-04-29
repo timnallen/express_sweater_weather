@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "timothyallen",
+    "password": null,
+    "database": "express_sweater_weather_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "timothyallen",
+    "password": null,
+    "database": "express_sweater_weather_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "timothyallen",
+    "password": null,
+    "database": "express_sweater_weather_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
