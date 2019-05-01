@@ -14,7 +14,7 @@ router.post("/", function(req, res, next) {
         res.setHeader("Content-Type", "application/json");
         res.status(201).send(JSON.stringify({api_key: user.api_key}));
       } else {
-      res.status(401).send(JSON.stringify("Unauthorized access"));
+        res.status(401).send(JSON.stringify("Unauthorized access"));
       }
     })
     .catch(error => {
