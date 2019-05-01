@@ -14,6 +14,9 @@ module.exports = {
       password_digest: {
         type: Sequelize.STRING
       },
+      api_key: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
