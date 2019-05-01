@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 var bcrypt = require("bcrypt");
 var crypto = require("crypto");
-var pry = require("pryjs");
 var User = require('../../../models').User;
 
 router.post("/", function(req, res, next) {
