@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var bcrypt = require("bcrypt");
 var crypto = require("crypto");
+var pry = require("pryjs");
 var User = require('../../../models').User;
 
 router.post("/", function(req, res, next) {
@@ -15,7 +16,6 @@ router.post("/", function(req, res, next) {
       }
     )
       .then(user => {
-        console.log(user.api_key);
         res.setHeader("Content-Type", "application/json");
         res.status(201).send(JSON.stringify({api_key: user.api_key}));
       })
@@ -25,7 +25,7 @@ router.post("/", function(req, res, next) {
       });
   } else {
     res.setHeader("Content-Type", "application/json");
-    res.status(401).send("Passwords do not match.")
+    res.status(401).send("Passwords do not match")
   }
 });
 
