@@ -5,6 +5,7 @@ var pry = require("pryjs");
 require("dotenv").config();
 var Location = require('../../../models').Location;
 var User = require('../../../models').User;
+var UserLocation = require('../../../models').UserLocation;
 
 router.post("/", function(req, res, next) {
   if (req.body.api_key) {
@@ -48,6 +49,20 @@ router.post("/", function(req, res, next) {
               } else {
                 favorite = location[0].dataValues;
               }
+              UserLocation.create(
+                {
+                  UserId: user[0].dataValues.id,
+                  LocationId: favorite.id,
+                }
+              )
+                .then(userLocation => {
+                    res.setHeader("Content-Type", "application/json");
+                    res.status(200).send(JSON.stringify({message: `${favorite.location} has been added to your favorites`}));
+                })
+                .catch(error => {
+                  res.setHeader("Content-Type", "application/json");
+                  res.status(500).send({ error });
+                });
             })
         }
       })
