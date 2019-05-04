@@ -74,7 +74,7 @@ router.post("/", function(req, res, next) {
 
 router.get("/", function(req, res, next) {
   if (req.body.api_key) {
-    User.findAll(
+    User.findOne(
       {
         where: {
           api_key: req.body.api_key
@@ -82,13 +82,42 @@ router.get("/", function(req, res, next) {
       }
     )
       .then(user => {
-        if (user.length === 0) {
+        if (user === null) {
           res.setHeader("Content-Type", "application/json");
           res.status(401).send("Unauthorized access")
         } else {
-          
+          user.getLocations().then(locations => {
+            var forecasts = [];
+            var forecast;
+            for (let counter = 0; counter < locations.length; counter++) {
+              let location = locations[counter];
+              let darkSkyUrl = `https://api.darksky.net/forecast/${process.env.DARKSKY_KEY}/${location.lat},${location.lng}`;
+              fetch(darkSkyUrl)
+                .then(response => response.json())
+                .then(result => {
+                  forecast = {
+                    location: location.location,
+                    currently: result.currently,
+                    hourly: result.hourly,
+                    daily: result.daily
+                  }
+                  forecasts.push(forecast)
+                  return forecasts
+                })
+                .then(forecasts => {
+                  if (counter === (locations.length - 1)) {
+                    res.setHeader("Content-Type", "application/json");
+                    res.status(200).send(JSON.stringify(forecasts));
+                  }
+                })
+            }
+          })
+          .catch(error => {
+            res.setHeader("Content-Type", "application/json");
+            res.status(500).send({ error });
+          });
         }
-      })
+      });
   } else {
     res.setHeader("Content-Type", "application/json");
     res.status(401).send("An authentic API key must be provided")
