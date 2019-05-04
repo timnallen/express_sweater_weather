@@ -70,6 +70,29 @@ router.post("/", function(req, res, next) {
     res.setHeader("Content-Type", "application/json");
     res.status(401).send("An authentic API key must be provided")
   }
-})
+});
+
+router.get("/", function(req, res, next) {
+  if (req.body.api_key) {
+    User.findAll(
+      {
+        where: {
+          api_key: req.body.api_key
+        }
+      }
+    )
+      .then(user => {
+        if (user.length === 0) {
+          res.setHeader("Content-Type", "application/json");
+          res.status(401).send("Unauthorized access")
+        } else {
+          
+        }
+      })
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.status(401).send("An authentic API key must be provided")
+  }
+});
 
 module.exports = router;
