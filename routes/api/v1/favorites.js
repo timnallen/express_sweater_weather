@@ -124,4 +124,52 @@ router.get("/", function(req, res, next) {
   }
 });
 
+router.delete("/", function(req, res, next) {
+  if (req.body.api_key) {
+    if (!req.body.location) {
+      res.setHeader("Content-Type", "application/json");
+      res.status(401).send("A location must be provided")
+    } else {
+      User.findOne(
+        {
+          where: {
+            api_key: req.body.api_key
+          }
+        }
+      )
+        .then(user => {
+          if (user === null) {
+            res.setHeader("Content-Type", "application/json");
+            res.status(401).send("Unauthorized access")
+          } else {
+            Location.findOne({
+              where: {
+                location: req.body.location
+              }
+            })
+              .then(location => {
+                UserLocation.destroy({
+                  where: {
+                    UserId: user.id,
+                    LocationId: location.id
+                  }
+                })
+              })
+              .then(userLocation => {
+                res.setHeader("Content-Type", "application/json");
+                res.status(204).send();
+              })
+              .catch(error => {
+                res.setHeader("Content-Type", "application/json");
+                res.status(500).send({ error })
+              });
+          }
+        });
+    }
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.status(401).send("An authentic API key must be provided")
+  }
+});
+
 module.exports = router;
